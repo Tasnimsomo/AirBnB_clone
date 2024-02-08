@@ -2,8 +2,6 @@
 
 import datetime
 import uuid
-import models
-
 
 class BaseModel:
     """
@@ -14,6 +12,7 @@ class BaseModel:
         """
             Initializes a new instance of the BaseModel class.
         """
+        from models import storage
         if kwargs:
             for key, value in kwargs.items():
                 if key != '__class__':
@@ -25,6 +24,7 @@ class BaseModel:
             self.created_at = datetime.datetime.now()
             self.updated_at = datetime.datetime.now()
             self.id = str(uuid.uuid4())
+            storage.new(self)
 
     def __str__(self):
         """
@@ -40,8 +40,10 @@ class BaseModel:
         """
         Updates the 'updated_at' attribute with the current datetime.
         """
+        from models import storage
         self.updated_at = datetime.datetime.now()
-
+        storage.save()
+        
     def to_dict(self):
         """
         Returns a dictionary representation of the BaseModel instance.
